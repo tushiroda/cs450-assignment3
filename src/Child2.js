@@ -33,12 +33,11 @@ class Child2 extends Component {
       temp.tip = d3.mean(dayTips);
       vals.push(temp);
     });
-    console.log(vals);
 
-    var margin = { top: 50, right: 10, bottom: 50, left: 30 },
+    // barchart stuff
+    var margin = { top: 50, right: 10, bottom: 50, left: 50 },
       w = 500 - margin.left - margin.right,
       h = 300 - margin.top - margin.bottom;
-
     var container = d3
       .select(".child2_svg")
       .attr("width", w + margin.left + margin.right)
@@ -46,9 +45,67 @@ class Child2 extends Component {
       .select(".g_2")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-    // axes
+    // axes data
     const x_data = vals.map((item) => item.day);
     const y_data = vals.map((item) => item.tip);
+
+    // x axis
+    const x = d3
+      .scaleBand()
+      .domain(x_data)
+      .range([margin.left, w])
+      .padding(0.2);
+    container
+      .selectAll(".x_axis_g")
+      .data([0])
+      .join("g")
+      .attr("class", "x_axis_g")
+      .attr("transform", `translate(0, ${h})`)
+      .call(d3.axisBottom(x));
+
+    // y axis
+    const y = d3
+      .scaleLinear()
+      .domain([0, d3.max(y_data)])
+      .range([h, 0]);
+    container
+      .selectAll(".y_axis_g")
+      .data([0])
+      .join("g")
+      .attr("class", "x_axis_g")
+      .attr("transform", `translate(${margin.left}, 0)`)
+      .call(d3.axisLeft(y));
+
+    // data
+    container
+      .selectAll("mybar")
+      .data(vals)
+      .enter()
+      .append("rect")
+      .attr("x", function (d) {
+        return x(d.day);
+      })
+      .attr("y", function (d) {
+        return y(d.tip);
+      })
+      .attr("width", 80)
+      .attr("height", function (d) {
+        return h - y(d.tip);
+      })
+      .attr("fill", "#69b3a2");
+
+    // labels
+    const labels = container.selectAll("g").data(data).enter().append("g");
+    labels
+      .append("text")
+      .attr("x", 200)
+      .attr("y", -10)
+      .text("Average Tip by Day");
+    labels
+      .append("text")
+      .attr("transform", "translate(10,130)rotate(-90)")
+      .text("Average Tip");
+    labels.append("text").attr("transform", "translate(240,235)").text("Day");
   }
 
   render() {

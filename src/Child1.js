@@ -63,22 +63,20 @@ class Child1 extends Component {
       .style("fill", "#69b3a2");
 
     // labels
-    const title = container
-      .selectAll("g")
-      .data(data)
-      .enter()
-      .append("g")
-      .attr("transform", `translate(150, -40)`);
-    title.append("text").attr("x", 50).attr("y", 50).text("Total Bill vs Tips");
-
-    const yAxis = container
-      .selectAll("g")
-      .data(data)
-      .enter()
-      .append("g")
-      .attr("transform", `translate(100, 0)`)
-      // .attr("transform", "rotate(-90)");
-    yAxis.append("text").attr("x", 50).attr("y", 50).text("Tips");
+    const labels = container.selectAll("g").data(data).enter().append("g");
+    labels
+      .append("text")
+      .attr("x", 180)
+      .attr("y", 0)
+      .text("Total Bill vs Tips");
+    labels
+      .append("text")
+      .attr("transform", "translate(10,100)rotate(-90)")
+      .text("Tips");
+    labels
+      .append("text")
+      .attr("transform", "translate(200,235)")
+      .text("Total Bill");
   }
 
   render() {
